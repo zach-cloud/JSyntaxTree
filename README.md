@@ -13,9 +13,11 @@ To use this project, include the following dependency in your pom file:
 <dependency>
     <groupId>com.github.zach-cloud</groupId>
     <artifactId>jsyntaxtree</artifactId>
-    <version>1.1</version>
+    <version>1.3</version>
 </dependency>
 ```
+
+Versions below 1.3 are unstable.
 
 # Usage
 
