@@ -166,3 +166,7 @@ Any function on the SyntaxTree class not listed here should be assume to be unsu
 
 
 ```
+
+# Building
+
+Clone the repository, run mvn clean, run mvn package.
