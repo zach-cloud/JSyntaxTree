@@ -132,4 +132,20 @@ public final class CallStatement extends AbstractStatement implements IFunctionR
         arguments.addAll(callArgument.getArguments());
         return arguments;
     }
+
+    @Override
+    public int hashCode() {
+        return this.toString().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) { return false; }
+        if (obj == this) { return true; }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        CallStatement other = (CallStatement) obj;
+        return this.toString().equals(other.toString());
+    }
 }

@@ -110,4 +110,20 @@ public final class WtsStringsFile extends AbstractNode {
     public List<WtsString> getStrings() {
         return Collections.unmodifiableList(strings);
     }
+
+    @Override
+    public int hashCode() {
+        return this.toString().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) { return false; }
+        if (obj == this) { return true; }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        WtsStringsFile other = (WtsStringsFile) obj;
+        return this.toString().equals(other.toString());
+    }
 }
