@@ -5,9 +5,32 @@ import services.AnalysisService;
 
 public interface IAnalysisService {
 
+    /**
+     * Aggressive = two sided function expansion (finds both
+     * usages of function, and places where function is used)
+     *
+     * Passive = one sided function expansion (finds usages of function)
+     *
+     * Inverse = reverse one sided function expansion (finds
+     * places where function is used)
+     */
     enum ExpansionStyle {
         AGGRESSIVE,
-        PASSIVE
+        PASSIVE,
+        INVERSE
+    }
+
+    /**
+     * Unused = variable is never used (can be deleted)
+     *
+     * Single use = one use, can be local
+     *
+     * Global = correct usage of a global variable
+     */
+    enum VariableScope {
+        UNUSED,
+        SINGLE_USE,
+        GLOBAL
     }
 
     /**
@@ -33,5 +56,26 @@ public interface IAnalysisService {
      */
     IsolateResult isolateFunction(ISyntaxTree tree, String variableName, int iterationCount);
 
+    /**
+     * Sets expansion style of this service.
+     *
+     * @param style Expansion style
+     */
     void setExpansionStyle(AnalysisService.ExpansionStyle style);
+
+    /**
+     * Retrieves current expansion style
+     *
+     * @return  Expansion style
+     */
+    ExpansionStyle getExpansionStyle();
+
+    /**
+     * Finds scope of desired variable
+     *
+     * @param tree          Syntax tree
+     * @param variableName  Variable name to find scope of
+     * @return              Variable scope report
+     */
+    VariableScope findVariableScope(ISyntaxTree tree, String variableName);
 }
