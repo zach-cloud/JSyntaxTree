@@ -4,7 +4,7 @@
 
     <groupId>com.github.zach-cloud</groupId>
     <artifactId>jsyntaxtree</artifactId>
-    <version>1.7</version>
+    <version>1.8-SNAPSHOT</version>
     <name>JASS Abstract Syntax Tree</name>
     <description>
         Syntax tree representation of the JASS language
@@ -263,6 +263,6 @@
         <connection>scm:git:git://github.com:zach-cloud/JSyntaxTree.git</connection>
         <developerConnection>scm:git:git@github.com:zach-cloud/JSyntaxTree.git</developerConnection>
         <url>https://github.com/zach-cloud/JSyntaxTree</url>
-        <tag>jsyntaxtree-1.7</tag>
+        <tag>HEAD</tag>
     </scm>
 </project>
