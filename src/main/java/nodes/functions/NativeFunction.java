@@ -4,7 +4,6 @@ import interfaces.IFunctionRenameable;
 import interfaces.IVariableRenameable;
 import nodes.AbstractFunction;
 import exception.ParsingException;
-import nodes.AbstractNode;
 import tree.TreeContext;
 
 import java.util.ArrayList;
@@ -139,5 +138,21 @@ public final class NativeFunction extends AbstractFunction implements IFunctionR
     public final List<Argument> getArguments() {
         List<Argument> arguments = new ArrayList<>();
         return arguments;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.toString().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) { return false; }
+        if (obj == this) { return true; }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        NativeFunction other = (NativeFunction) obj;
+        return this.toString().equals(other.toString());
     }
 }

@@ -3,7 +3,6 @@ package nodes.functions;
 import interfaces.IFunctionRenameable;
 import interfaces.IMergable;
 import interfaces.IVariableRenameable;
-import nodes.AbstractFunction;
 import nodes.AbstractNode;
 import nodes.AbstractStatement;
 import exception.ParsingException;
@@ -349,5 +348,21 @@ public final class Statements extends AbstractNode implements IMergable, IFuncti
             arguments.addAll(statement.getArguments());
         }
         return arguments;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.toString().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) { return false; }
+        if (obj == this) { return true; }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        Statements other = (Statements) obj;
+        return this.toString().equals(other.toString());
     }
 }

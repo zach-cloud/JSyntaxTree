@@ -60,4 +60,20 @@ public final class Output extends AbstractNode {
     public final String getType() {
         return type;
     }
+
+    @Override
+    public int hashCode() {
+        return this.toString().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) { return false; }
+        if (obj == this) { return true; }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        Output other = (Output) obj;
+        return this.toString().equals(other.toString());
+    }
 }

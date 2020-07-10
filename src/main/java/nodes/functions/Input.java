@@ -1,7 +1,5 @@
 package nodes.functions;
 
-import interfaces.IFunctionRenameable;
-import interfaces.IVariableRenameable;
 import nodes.AbstractNode;
 import nodes.j.Variable;
 import exception.ParsingException;
@@ -70,5 +68,21 @@ public final class Input extends AbstractNode {
 
     public final String getName() {
         return inputVariable.getName();
+    }
+
+    @Override
+    public int hashCode() {
+        return this.toString().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) { return false; }
+        if (obj == this) { return true; }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        Input other = (Input) obj;
+        return this.toString().equals(other.toString());
     }
 }

@@ -6,8 +6,11 @@ import exception.RenameFailureException;
 import exception.WritingException;
 import interfaces.IPreprocessFileService;
 import interfaces.IRandomNameGeneratorService;
+import model.IsolateResult;
 import nodes.functions.Function;
 import nodes.functions.TypeDeclaration;
+import nodes.j.FunctionsSection;
+import nodes.j.GlobalsSection;
 import services.RandomNameGeneratorService;
 import nodes.AbstractFunction;
 import nodes.j.Script;
@@ -19,6 +22,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -37,6 +41,19 @@ public final class SyntaxTree implements ISyntaxTree {
      */
     public SyntaxTree(Script script) {
         this.script = script;
+    }
+
+    public static SyntaxTree from(IsolateResult isolateResult) {
+        List<AbstractFunction> functions = new ArrayList<>(isolateResult.getIsolatedFunctions());
+        List<Variable> variables = new ArrayList<>(isolateResult.getIsolatedVariables());
+        return new SyntaxTree(
+                new Script(
+                        new GlobalsSection(variables,
+                                new TreeContext()),
+                        new FunctionsSection(functions,
+                                new TreeContext()),
+                        new ArrayList<>(),
+                        new TreeContext()));
     }
 
     /**
