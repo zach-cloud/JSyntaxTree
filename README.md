@@ -13,7 +13,7 @@ To use this project, include the following dependency in your pom file:
 <dependency>
     <groupId>com.github.zach-cloud</groupId>
     <artifactId>jsyntaxtree</artifactId>
-    <version>1.3</version>
+    <version>1.5</version>
 </dependency>
 ```
 
