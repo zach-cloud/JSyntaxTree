@@ -66,4 +66,20 @@ public final class MethodDeclaration extends GenericDeclaration implements IFunc
     public final void renameFunction(String oldFunctionName, String newFunctionName) {
         this.setName(rename(this.getName(), oldFunctionName, newFunctionName));
     }
+
+    @Override
+    public int hashCode() {
+        return this.toString().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) { return false; }
+        if (obj == this) { return true; }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        MethodDeclaration other = (MethodDeclaration) obj;
+        return this.toString().equals(other.toString());
+    }
 }

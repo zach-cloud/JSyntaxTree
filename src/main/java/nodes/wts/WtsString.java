@@ -145,4 +145,20 @@ public final class WtsString extends AbstractNode {
         builtString.append("}");
         return builtString.toString();
     }
+
+    @Override
+    public int hashCode() {
+        return this.toString().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) { return false; }
+        if (obj == this) { return true; }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        WtsString other = (WtsString) obj;
+        return this.toString().equals(other.toString());
+    }
 }

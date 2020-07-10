@@ -39,4 +39,20 @@ public final class Scope extends ScriptContainerInitializer {
         this.startText = "scope";
         this.endText = "endscope";
     }
+
+    @Override
+    public int hashCode() {
+        return this.toString().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) { return false; }
+        if (obj == this) { return true; }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        Scope other = (Scope) obj;
+        return this.toString().equals(other.toString());
+    }
 }

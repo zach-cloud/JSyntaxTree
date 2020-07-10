@@ -3,9 +3,7 @@ package nodes.functions;
 import exception.ParsingException;
 import interfaces.IFunctionRenameable;
 import interfaces.IVariableRenameable;
-import nodes.AbstractFunction;
 import nodes.AbstractNode;
-import nodes.j.Variable;
 import tree.TreeContext;
 import java.util.ArrayList;
 import java.util.List;
@@ -507,5 +505,21 @@ public final class Argument extends AbstractNode implements IFunctionRenameable,
 
     public void setArgument(String line) {
         readIntoArgument(line);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.toString().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) { return false; }
+        if (obj == this) { return true; }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        Argument other = (Argument) obj;
+        return this.toString().equals(other.toString());
     }
 }

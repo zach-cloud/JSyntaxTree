@@ -2,7 +2,6 @@ package nodes.functions;
 
 import interfaces.IFunctionRenameable;
 import interfaces.IVariableRenameable;
-import nodes.AbstractNode;
 import nodes.AbstractStatement;
 import exception.ParsingException;
 import tree.TreeContext;
@@ -125,5 +124,21 @@ public final class ReturnStatement extends AbstractStatement implements IFunctio
         List<Argument> arguments = new ArrayList<>();
         arguments.addAll(returnArgument.getArguments());
         return arguments;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.toString().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) { return false; }
+        if (obj == this) { return true; }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        ReturnStatement other = (ReturnStatement) obj;
+        return this.toString().equals(other.toString());
     }
 }

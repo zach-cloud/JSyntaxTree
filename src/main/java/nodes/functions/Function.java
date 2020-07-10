@@ -6,7 +6,6 @@ import interfaces.IMergable;
 import interfaces.IVariableRenameable;
 import nodes.AbstractFunction;
 import nodes.AbstractNode;
-import nodes.AbstractStatement;
 import tree.TreeContext;
 
 import java.util.ArrayList;

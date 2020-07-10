@@ -28,7 +28,7 @@ public final class GlobalsSection extends AbstractNode implements IMergable, IVa
         super(inputScanner, context);
     }
 
-    private GlobalsSection(List<Variable> globalVariables, TreeContext context) {
+    public GlobalsSection(List<Variable> globalVariables, TreeContext context) {
         super(context);
         this.globalVariables = new ArrayList<>();
         this.globalVariables.addAll(globalVariables);
@@ -136,5 +136,21 @@ public final class GlobalsSection extends AbstractNode implements IMergable, IVa
      */
     public final void merge(AbstractNode other) {
         globalVariables.addAll(((GlobalsSection)other).globalVariables);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.toString().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) { return false; }
+        if (obj == this) { return true; }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        GlobalsSection other = (GlobalsSection) obj;
+        return this.toString().equals(other.toString());
     }
 }

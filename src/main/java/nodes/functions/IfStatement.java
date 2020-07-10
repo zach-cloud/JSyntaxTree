@@ -2,13 +2,10 @@ package nodes.functions;
 
 import interfaces.IFunctionRenameable;
 import interfaces.IVariableRenameable;
-import nodes.AbstractNode;
 import nodes.AbstractStatement;
 import exception.ParsingException;
 import tree.TreeContext;
 
-import javax.swing.plaf.nimbus.State;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -438,5 +435,21 @@ public final class IfStatement extends AbstractStatement implements IFunctionRen
             }
         }
         return arguments;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.toString().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) { return false; }
+        if (obj == this) { return true; }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        IfStatement other = (IfStatement) obj;
+        return this.toString().equals(other.toString());
     }
 }

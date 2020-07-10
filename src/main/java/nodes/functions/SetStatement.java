@@ -2,7 +2,6 @@ package nodes.functions;
 
 import interfaces.IFunctionRenameable;
 import interfaces.IVariableRenameable;
-import nodes.AbstractNode;
 import nodes.AbstractStatement;
 import exception.ParsingException;
 import tree.TreeContext;
@@ -114,7 +113,7 @@ public final class SetStatement extends AbstractStatement implements IFunctionRe
      */
     @Override
     public AbstractStatement inline(String functionName, String newText) {
-        return new SetStatement(variable, (Argument)(variableArgument.inline(functionName, newText)), context);
+        return new SetStatement(variable, (variableArgument.inline(functionName, newText)), context);
     }
 
     public boolean usesAsFunction(String functionName) {
@@ -134,5 +133,21 @@ public final class SetStatement extends AbstractStatement implements IFunctionRe
         arguments.addAll(variableArgument.getArguments());
         arguments.add(variable);
         return arguments;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.toString().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) { return false; }
+        if (obj == this) { return true; }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        SetStatement other = (SetStatement) obj;
+        return this.toString().equals(other.toString());
     }
 }
