@@ -326,7 +326,6 @@ public final class Argument extends AbstractNode implements IFunctionRenameable,
         } else if(arrayCall != null && arrayName != null) {
             arrayCall.renameVariable(oldVariableName, newVariableName);
             arrayName.renameVariable(oldVariableName, newVariableName);
-            System.out.println();
         } else if(notPart != null) {
             notPart.renameVariable(oldVariableName, newVariableName);
         }
