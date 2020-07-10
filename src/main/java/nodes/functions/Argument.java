@@ -375,6 +375,18 @@ public final class Argument extends AbstractNode implements IFunctionRenameable,
         return this;
     }
 
+    public boolean calls(String functionName) {
+        if (functionCall != null) {
+            return functionCall.calls(functionName) ||
+                    usesAsFunction(functionName);
+        } else if(arrayCall != null && arrayName != null) {
+            return arrayCall.calls(functionName) ||
+                    arrayName.calls(functionName) ||
+                    usesAsFunction(functionName);
+        }
+        return false;
+    }
+
     public boolean usesAsFunction(String functionName) {
         if (functionCall != null) {
             return functionCall.usesAsFunction(functionName);

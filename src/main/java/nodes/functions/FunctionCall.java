@@ -160,7 +160,11 @@ public final class FunctionCall extends AbstractNode implements IFunctionRenamea
                 return true;
             }
         }
-        return this.functionName.equals(functionName);
+        return false;
+    }
+
+    public boolean calls(String functionName) {
+        return usesAsFunction(functionName) || this.functionName.equals(functionName);
     }
 
     /**

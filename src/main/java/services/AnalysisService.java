@@ -249,7 +249,7 @@ public class AnalysisService implements IAnalysisService {
         if(expansionStyle != ExpansionStyle.INVERSE) {
             for (AbstractFunction function : tree.getScript().getFunctionsSection().getFunctions()) {
                 for (Argument arg : selectedFunction.getArguments()) {
-                    if (arg.usesAsFunction(function.getName())) {
+                    if (arg.calls(function.getName())) {
                         if (recursiveResult.getIsolatedFunctions().add(function)) {
                             newAddedFunctions.add(function);
                         }
@@ -275,7 +275,7 @@ public class AnalysisService implements IAnalysisService {
         if (expansionStyle == ExpansionStyle.AGGRESSIVE || expansionStyle == ExpansionStyle.INVERSE) {
             for (AbstractFunction function : tree.getScript().getFunctionsSection().getFunctions()) {
                 for (Argument arg : function.getArguments()) {
-                    if (arg.usesAsFunction(functionName)) {
+                    if (arg.calls(functionName)) {
                         if (recursiveResult.getIsolatedFunctions().add(function)) {
                             newAddedFunctions.add(function);
                         }
