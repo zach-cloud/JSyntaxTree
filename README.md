@@ -167,6 +167,12 @@ Any function on the SyntaxTree class not listed here should be assume to be unsu
 
 ```
 
+# Services
+
+There are several services included in the "services" package that can perform operations on the syntax tree.
+
+Right now, the primary external facing service is the AnalysisService which can perform code analysis
+
 # Building
 
 Clone the repository, run mvn clean, run mvn package.
