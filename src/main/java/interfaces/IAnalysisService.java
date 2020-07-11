@@ -3,6 +3,9 @@ package interfaces;
 import model.IsolateResult;
 import services.AnalysisService;
 
+/**
+ * Service to assist in code analysis
+ */
 public interface IAnalysisService {
 
     /**
@@ -75,7 +78,7 @@ public interface IAnalysisService {
      *
      * @param tree          Syntax tree
      * @param variableName  Variable name to find scope of
-     * @return              Variable scope report
+     * @return              Variable Scope enum representing variable usage
      */
     VariableScope findVariableScope(ISyntaxTree tree, String variableName);
 }

@@ -8,12 +8,12 @@ import nodes.AbstractFunction;
 import nodes.functions.Argument;
 import nodes.j.Variable;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-public class AnalysisService implements IAnalysisService {
+/**
+ * Service to assist in code analysis
+ */
+public final class AnalysisService implements IAnalysisService {
 
     private ExpansionStyle expansionStyle;
 
@@ -116,7 +116,7 @@ public class AnalysisService implements IAnalysisService {
      * @return                  Set of discovered functions
      */
     private Set<AbstractFunction> performFunctionExpansion(ISyntaxTree tree, String variableName, IsolateResult recursiveResult) {
-        Set<AbstractFunction> newAddedFunctions = new HashSet<>();
+        Set<AbstractFunction> newAddedFunctions = new LinkedHashSet <>();
         for (AbstractFunction function : tree.getScript()
                 .getFunctionsSection().getFunctions()) {
             for (Argument argument : function.getArguments()) {
@@ -156,8 +156,8 @@ public class AnalysisService implements IAnalysisService {
             List<String> arguments = accumulateArguments(selectedFunction);
 
             // Set up values for storing new found usages
-            Set<AbstractFunction> newAddedFunctions = new HashSet<>();
-            Set<Variable> newAddedVariables = new HashSet<>();
+            Set<AbstractFunction> newAddedFunctions = new LinkedHashSet<>();
+            Set<Variable> newAddedVariables = new LinkedHashSet<>();
 
             // Now scan all variables for usages in this function
             performVariableExpansion(tree, recursiveResult, arguments, newAddedVariables);
@@ -346,7 +346,13 @@ public class AnalysisService implements IAnalysisService {
         return isolateFunction(tree, variableName, iterationCount, new IsolateResult());
     }
 
-
+    /**
+     * Discovers scope of the specified variable name
+     *
+     * @param tree          Syntax tree
+     * @param variableName  Variable name to find scope of
+     * @return              Variable Scope enum representing variable usage
+     */
     public VariableScope findVariableScope(ISyntaxTree tree, String variableName) {
         IsolateResult result = isolateVariable(tree, variableName, 1);
         int size = result.getIsolatedFunctions().size();
