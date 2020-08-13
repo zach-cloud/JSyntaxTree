@@ -3,6 +3,7 @@ package nodes.functions;
 import interfaces.IFunctionRenameable;
 import interfaces.IVariableRenameable;
 import nodes.AbstractStatement;
+import nodes.arguments.Argument;
 import nodes.j.Variable;
 import exception.ParsingException;
 import tree.TreeContext;

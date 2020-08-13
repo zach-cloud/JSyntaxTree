@@ -21,7 +21,7 @@ Feature: Test single argument
     When Argument is read
     Then Argument should be:
     """
-    GetHandleId(s__TimerUtils___tT[i])
+    GetHandleId((s__TimerUtils___tT[i]))
     """
 
   @Argument
@@ -33,7 +33,7 @@ Feature: Test single argument
     When Argument is read
     Then Argument should be:
     """
-    TimerUtils___HELD
+    (TimerUtils___HELD)
     """
 
   @Argument
@@ -57,7 +57,7 @@ Feature: Test single argument
     When Argument is read
     Then Argument should be:
     """
-    GetRandomInt(1,100) <= sOv + 5 * xMo(wdx(No[PSx],'odef') or wdx(No[PSx],'rej6'))
+    GetRandomInt(1,100) <= sOv + 5 * xMo(wdx((No[(PSx)]),'odef') or wdx((No[(PSx)]),'rej6'))
     """
 
   @Argument

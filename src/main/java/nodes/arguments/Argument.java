@@ -1,9 +1,10 @@
-package nodes.functions;
+package nodes.arguments;
 
 import exception.ParsingException;
 import interfaces.IFunctionRenameable;
 import interfaces.IVariableRenameable;
 import nodes.AbstractNode;
+import nodes.functions.FunctionCall;
 import tree.TreeContext;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,55 +14,25 @@ import java.util.Scanner;
  * Stores an argument for a function call or statement.
  * This decomposes the argument into the most basic form possible.
  *
- * This class logically splits an argument into three basic forms:
+ * This class logically splits an argument into basic forms:
  *
  * - Basic argument: cannot be broken down any further and calls no method
  * - Function call: a single, standalone function call
  * - Aggregation: other arguments joined by an operator (for example +)
+ * - Array call: An access to an array. Like myArray[5]. Two parts to it.
+ * - "Not" Argument: An argument with a Not part on it.
  */
 public final class Argument extends AbstractNode implements IFunctionRenameable, IVariableRenameable {
 
-    /**
-     * Basic Argument is something that stands alone, for example
-     * a literal or a variable reference
-     * i.e. "5", or "myVariable"
-     */
-    private String basicArgument;
-    /**
-     * A function call is an atomic call to a function that
-     * may or may not return a value.
-     * i.e. myFunction(5)
-     */
-    private FunctionCall functionCall;
-    /**
-     * An array name is the outer part of the call to an array
-     * Such as ybx[Abc], ybx would be the arrayName
-     */
-    private Argument arrayName;
-    /**
-     * An array call is the inner section to an array.
-     * Such as ybx[Abc], Abc would be the arrayCall
-     */
-    private Argument arrayCall;
-    /**
-     * An aggregation is a combination of two or more
-     * basic arguments and/or function calls.
-     * i.e. myFunction + 5 + 3
-     */
-    private List<Argument> aggregation;
-    /**
-     * The separator between the aggregation entries.
-     */
-    private String operator;
+    private ArgumentType whichArgument;
+
     /**
      * If we removed parenthesis to begin with,
      * we want to add them back on at the end.
      */
     private boolean hasParenthesis;
-    /**
-     * Represents the argument of not (notPart)
-     */
-    private Argument notPart;
+
+    private boolean isAggregate;
 
     /**
      * Operators that cen separate an aggregation.
@@ -88,17 +59,10 @@ public final class Argument extends AbstractNode implements IFunctionRenameable,
     /**
      * No-args constructor used for creating from an existing
      */
-    public Argument(String basicArgument, FunctionCall functionCall, List<Argument> aggregation, String operator, Argument notPart, Argument arrayName, Argument arrayCall, boolean hasParenthesis, TreeContext context) {
+    public Argument(ArgumentType whichArgument, boolean hasParenthesis, TreeContext context) {
         super(context);
-        this.basicArgument = basicArgument;
-        this.functionCall = functionCall;
-        this.aggregation = aggregation;
-        this.operator = operator;
-        this.notPart = notPart;
+        this.whichArgument = whichArgument;
         this.hasParenthesis = hasParenthesis;
-        this.arrayName = arrayName;
-        this.arrayCall = arrayCall;
-        verifyState();
     }
 
     /**
@@ -200,6 +164,7 @@ public final class Argument extends AbstractNode implements IFunctionRenameable,
         // Handle the annoying "is it < or <=" case by using spacing
         line = line.replaceAll("<^[\\=]", "< ");
         line = line.replaceAll(">^[\\=]", "> ");
+        String basicArgument = null;
         if (shouldTrim(line)) {
             // Maintain original parenthesis
             hasParenthesis = true;
@@ -212,8 +177,10 @@ public final class Argument extends AbstractNode implements IFunctionRenameable,
         }
         List<String> splitParts = new ArrayList<>();
         StringBuilder splitPart = new StringBuilder();
+        String operator;
+        List<Argument> aggregation = new ArrayList<>();
         if (isFunctionCall(line)) {
-            this.functionCall = new FunctionCall(new Scanner(line), context);
+            this.whichArgument = new FunctionCallArgument(line, context);
         } else {
             // If it's not a function call, try to make it an
             // aggregation first. If it's not, then make it a basic arg.
@@ -268,7 +235,7 @@ public final class Argument extends AbstractNode implements IFunctionRenameable,
             }
             if (foundOperator) {
                 // If we found an operator, then it's an aggregation
-                this.operator = whichOperator.trim();
+                operator = whichOperator.trim();
                 int size = splitParts.size();
                 for (String part : splitParts) {
                     // Handle empty part, for example "-1" splits into "", "1"
@@ -282,29 +249,27 @@ public final class Argument extends AbstractNode implements IFunctionRenameable,
                     for (String part : splitParts) {
                         // Parse each sub-argument into arguments.
                         Argument argumentPart = new Argument(new Scanner(part), context);
-                        this.aggregation.add(argumentPart);
+                        aggregation.add(argumentPart);
                     }
-                } else if(size == 1 && this.operator.equals("not")) {
-                    notPart = new Argument(new Scanner(splitParts.get(1)), context);
+                    whichArgument = new AggregationArgument(aggregation, operator, context);
+                    this.isAggregate = true;
+                } else if(size == 1 && operator.equals("not")) {
+                    whichArgument = new NotArgument(splitParts.get(1), context);
                 } else {
-                    // We thought it was an aggregation, but it's actually
-                    // a basic function. The line "-1" triggers this block.
-                    this.basicArgument = line;
+                    basicArgument = line;
                 }
             } else {
-                // It couldn't be split, so it's not an aggregation.
-                this.basicArgument = line;
+                basicArgument = line;
             }
         }
         if(basicArgument != null && basicArgument.matches(".*\\[.*\\]") && basicArgument.endsWith("]")) {
             String firstPart = basicArgument.substring(0, basicArgument.indexOf("["));
             String secondPart = basicArgument.substring(1+basicArgument.indexOf("["), basicArgument.length()-1);
             // Clear out basicArgument and set array parts
-            arrayName = new Argument(new Scanner(firstPart), context);
-            arrayCall = new Argument(new Scanner(secondPart), context);
-            basicArgument = null;
+            whichArgument = new ArrayArgument(firstPart, secondPart, context);
+        } else if(basicArgument != null && !basicArgument.isEmpty()) {
+            whichArgument = new BasicArgument(basicArgument, context);
         }
-        verifyState();
     }
 
     /**
@@ -315,20 +280,10 @@ public final class Argument extends AbstractNode implements IFunctionRenameable,
      */
     @Override
     public final void renameVariable(String oldVariableName, String newVariableName) {
-        if (functionCall != null) {
-            functionCall.renameVariable(oldVariableName, newVariableName);
-        } else if (basicArgument != null && !basicArgument.isEmpty()) {
-            this.basicArgument = rename(basicArgument, oldVariableName, newVariableName);
-        } else if (!aggregation.isEmpty()) {
-            for (Argument arg : aggregation) {
-                arg.renameVariable(oldVariableName, newVariableName);
-            }
-        } else if(arrayCall != null && arrayName != null) {
-            arrayCall.renameVariable(oldVariableName, newVariableName);
-            arrayName.renameVariable(oldVariableName, newVariableName);
-        } else if(notPart != null) {
-            notPart.renameVariable(oldVariableName, newVariableName);
+        if(whichArgument == null) {
+            return;
         }
+        whichArgument.renameVariable(oldVariableName, newVariableName);
     }
 
     /**
@@ -339,69 +294,31 @@ public final class Argument extends AbstractNode implements IFunctionRenameable,
      */
     @Override
     public final void renameFunction(String oldFunctionName, String newFunctionName) {
-        if (functionCall != null) {
-            this.functionCall.renameFunction(oldFunctionName, newFunctionName);
-        } else if (basicArgument != null && !basicArgument.isEmpty()) {
-            this.basicArgument = rename(basicArgument, oldFunctionName, newFunctionName);
-        } else if (!aggregation.isEmpty()) {
-            for (Argument arg : aggregation) {
-                arg.renameFunction(oldFunctionName, newFunctionName);
-            }
-        } else if(arrayCall != null && arrayName != null) {
-            arrayCall.renameFunction(oldFunctionName, newFunctionName);
-            arrayName.renameFunction(oldFunctionName, newFunctionName);
-        } else if(notPart != null) {
-            notPart.renameFunction(oldFunctionName, newFunctionName);
+        if(whichArgument == null) {
+            return;
         }
+        whichArgument.renameFunction(oldFunctionName, newFunctionName);
     }
 
     public Argument inline(String functionName, String newText) {
-        if (functionCall != null) {
-            return new Argument(basicArgument, functionCall.inline(functionName, newText), aggregation, operator, notPart, arrayName, arrayCall, hasParenthesis, context);
-        } else if (basicArgument != null && !basicArgument.isEmpty()) {
+        if(whichArgument == null) {
             return this;
-        } else if (!aggregation.isEmpty()) {
-            List<Argument> newAggregation = new ArrayList<>();
-            for (Argument arg : aggregation) {
-                newAggregation.add((Argument) arg.inline(functionName, newText));
-            }
-            return new Argument(basicArgument, functionCall, newAggregation, operator, notPart, arrayName, arrayCall, hasParenthesis, context);
-        } else if(arrayCall != null && arrayName != null) {
-            return new Argument(basicArgument, functionCall, aggregation, operator, notPart, arrayName, arrayCall, hasParenthesis, context);
-        } else if(notPart != null) {
-            return new Argument(basicArgument, functionCall, aggregation, operator, notPart.inline(functionName, newText), arrayName, arrayCall, hasParenthesis, context);
         }
-        return this;
+        return new Argument(whichArgument.inline(functionName, newText), hasParenthesis, context);
     }
 
     public boolean calls(String functionName) {
-        if (functionCall != null) {
-            return functionCall.calls(functionName) ||
-                    usesAsFunction(functionName);
-        } else if(arrayCall != null && arrayName != null) {
-            return arrayCall.calls(functionName) ||
-                    arrayName.calls(functionName) ||
-                    usesAsFunction(functionName);
+        if(whichArgument == null) {
+            return false;
         }
-        return false;
+        return whichArgument.calls(functionName);
     }
 
     public boolean usesAsFunction(String functionName) {
-        if (functionCall != null) {
-            return functionCall.usesAsFunction(functionName);
-        } else if (basicArgument != null && !basicArgument.isEmpty()) {
-            return basicArgument.contains("function " + functionName);
-        } else if(arrayCall != null && arrayName != null) {
-            return arrayCall.usesAsFunction(functionName) || arrayName.usesAsFunction(functionName);
-        } else if (!aggregation.isEmpty()) {
-            for (Argument arg : aggregation) {
-                if(arg.usesAsFunction(functionName)) {
-                    return true;
-                }
-            }
+        if(whichArgument == null) {
             return false;
         }
-        return false;
+        return whichArgument.usesAsFunction(functionName);
     }
 
     /**
@@ -410,7 +327,7 @@ public final class Argument extends AbstractNode implements IFunctionRenameable,
      */
     @Override
     protected final void setupVariables() {
-        this.aggregation = new ArrayList<>();
+
     }
 
     /**
@@ -421,27 +338,16 @@ public final class Argument extends AbstractNode implements IFunctionRenameable,
      */
     @Override
     public final String toString() {
+        if(whichArgument == null) {
+            return "";
+        }
+
         StringBuilder built = new StringBuilder();
         if (hasParenthesis) {
             // Add back on the trimmed parenthesis, if required.
             built.append("(");
         }
-        if (basicArgument != null && aggregation.isEmpty() && functionCall == null) {
-            return basicArgument;
-        } else if (!aggregation.isEmpty()) {
-            for (Argument aggregate : aggregation) {
-                built.append(aggregate.toString()).append(" ").append(operator).append(" ");
-            }
-            removeFinalCharacter(operator.length() + 2, built);
-        } else if (functionCall != null) {
-            return functionCall.toString();
-        } else if(arrayCall != null && arrayName != null) {
-            return arrayName.toString() + "[" + arrayCall + "]";
-        } else if(notPart != null) {
-            return "not (" + notPart.toString() + ")";
-        } else {
-            return "";
-        }
+        built.append(whichArgument.toString());
         if (hasParenthesis) {
             // Add back on the trimmed parenthesis, if required.
             built.append(")");
@@ -461,55 +367,22 @@ public final class Argument extends AbstractNode implements IFunctionRenameable,
         return this.toString();
     }
 
-    /**
-     * Ensures the state of this argument is not corrupted.
-     * Should not happen under regular usage.
-     */
-    private void verifyState() {
-        if (basicArgument != null) {
-            if (!(arrayCall == null && arrayName == null && aggregation.isEmpty() && functionCall == null)) {
-                throw new ParsingException("Failed internal validity (1) check: " + this.toString());
-            }
-        } else if (!aggregation.isEmpty()) {
-            if (!(arrayCall == null && arrayName == null && basicArgument == null) && functionCall == null) {
-                throw new ParsingException("Failed internal validity (2) check: " + this.toString());
-            }
-        } else if (functionCall != null) {
-            if (!(arrayCall == null && arrayName == null && basicArgument == null && aggregation.isEmpty())) {
-                throw new ParsingException("Failed internal validity (3) check: " + this.toString());
-            }
-        } else if (arrayName != null && arrayCall != null) {
-            if (!(functionCall == null && basicArgument == null && aggregation.isEmpty())) {
-                throw new ParsingException("Failed internal validity (4) check: " + this.toString());
-            }
-        } else if(notPart == null) {
-            throw new ParsingException("Failed internal validity (5) check: " + this.toString());
-        }
-    }
-
     public boolean isNot() {
-        return notPart != null;
+        return whichArgument instanceof NotArgument;
     }
 
     public Argument getNotPart() {
-        return notPart;
+        return ((NotArgument)whichArgument).getNotPart();
     }
 
     public final List<Argument> getArguments() {
         List<Argument> baseArguments = new ArrayList<>();
 
-        if(basicArgument != null) {
+        if(whichArgument instanceof BasicArgument || whichArgument instanceof  FunctionCallArgument) {
             baseArguments.add(this);
-        } else if(aggregation != null && !aggregation.isEmpty()) {
-            for(Argument arg : aggregation) {
-                baseArguments.addAll(arg.getArguments());
-            }
-        } else if(functionCall != null) {
-            baseArguments.add(this);
-            for(Argument arg : functionCall.getArguments()) {
-                baseArguments.addAll(arg.getArguments());
-            }
         }
+
+        baseArguments.addAll(whichArgument.getArguments());
 
         return baseArguments;
     }

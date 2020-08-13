@@ -9,7 +9,7 @@ Feature: Test Function Call
     When Function Call is read
     Then Function Call should be:
     """
-    GetHandleId(s__TimerUtils___tT[i])
+    GetHandleId((s__TimerUtils___tT[i]))
     """
 
   @FunctionCall
@@ -33,11 +33,11 @@ Feature: Test Function Call
     When Function Call is read
     Then Function Call should be:
     """
-    myFunction(x,2,myFunction2(a,b,c),anotherArg,arg3 + arg4)
+    myFunction(x,2,myFunction2(a,b,c),(anotherArg),arg3 + (arg4))
     """
 
   @FunctionCall
-  Scenario: Test function call complex atual
+  Scenario: Test function call complex actual
     Given input data:
     """
     SetCameraBounds((-7424.)+GetCameraMargin(CAMERA_MARGIN_LEFT),(-5120.)+GetCameraMargin(CAMERA_MARGIN_BOTTOM),11520.-GetCameraMargin(CAMERA_MARGIN_RIGHT),10368.-GetCameraMargin(CAMERA_MARGIN_TOP),(-7424.)+GetCameraMargin(CAMERA_MARGIN_LEFT),10368.-GetCameraMargin(CAMERA_MARGIN_TOP),11520.-GetCameraMargin(CAMERA_MARGIN_RIGHT),(-5120.)+GetCameraMargin(CAMERA_MARGIN_BOTTOM))
@@ -45,5 +45,5 @@ Feature: Test Function Call
     When Function Call is read
     Then Function Call should be:
     """
-    SetCameraBounds(-7424. + GetCameraMargin(CAMERA_MARGIN_LEFT),-5120. + GetCameraMargin(CAMERA_MARGIN_BOTTOM),11520. - GetCameraMargin(CAMERA_MARGIN_RIGHT),10368. - GetCameraMargin(CAMERA_MARGIN_TOP),-7424. + GetCameraMargin(CAMERA_MARGIN_LEFT),10368. - GetCameraMargin(CAMERA_MARGIN_TOP),11520. - GetCameraMargin(CAMERA_MARGIN_RIGHT),-5120. + GetCameraMargin(CAMERA_MARGIN_BOTTOM))
+    SetCameraBounds((-7424.) + GetCameraMargin(CAMERA_MARGIN_LEFT),(-5120.) + GetCameraMargin(CAMERA_MARGIN_BOTTOM),11520. - GetCameraMargin(CAMERA_MARGIN_RIGHT),10368. - GetCameraMargin(CAMERA_MARGIN_TOP),(-7424.) + GetCameraMargin(CAMERA_MARGIN_LEFT),10368. - GetCameraMargin(CAMERA_MARGIN_TOP),11520. - GetCameraMargin(CAMERA_MARGIN_RIGHT),(-5120.) + GetCameraMargin(CAMERA_MARGIN_BOTTOM))
     """

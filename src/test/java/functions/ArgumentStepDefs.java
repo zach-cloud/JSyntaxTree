@@ -1,6 +1,6 @@
 package functions;
 
-import nodes.functions.Argument;
+import nodes.arguments.Argument;
 import generic.TestContext;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;

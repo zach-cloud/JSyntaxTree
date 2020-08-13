@@ -3,7 +3,7 @@ package nodes.j;
 import interfaces.IFunctionRenameable;
 import interfaces.IVariableRenameable;
 import nodes.AbstractNode;
-import nodes.functions.Argument;
+import nodes.arguments.Argument;
 import tree.TreeContext;
 
 import java.util.ArrayList;

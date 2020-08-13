@@ -96,7 +96,7 @@ Feature: Test the If statement node
     When If Statement is read
     Then If Statements should be:
     """
-    if (LoadInteger(TimerUtils___ht,0,GetHandleId(t)) == TimerUtils___HELD) then
+    if ((LoadInteger(TimerUtils___ht,0,GetHandleId((t)))) == TimerUtils___HELD) then
     return
     endif
     """

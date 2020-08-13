@@ -2,7 +2,7 @@ package nodes;
 
 import interfaces.IFunctionRenameable;
 import interfaces.IVariableRenameable;
-import nodes.functions.Argument;
+import nodes.arguments.Argument;
 import tree.TreeContext;
 
 import java.util.List;

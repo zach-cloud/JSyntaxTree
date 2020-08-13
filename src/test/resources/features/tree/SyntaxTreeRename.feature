@@ -49,7 +49,7 @@ Feature: Test renaming syntax tree variables
     boolean array test123
     endglobals
     function sla takes integer Zbx,string sLa returns nothing
-    if not (test123[Zbx]) then
+    if not ((test123[Zbx])) then
     set test123[Zbx] = true
     set yBx[Zbx] = aao(Zbx)
     set ycx[Zbx] = Xno()

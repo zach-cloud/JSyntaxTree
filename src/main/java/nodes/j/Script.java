@@ -6,7 +6,7 @@ import interfaces.IVariableRenameable;
 import nodes.AbstractFunction;
 import nodes.AbstractNode;
 import exception.ParsingException;
-import nodes.functions.Argument;
+import nodes.arguments.Argument;
 import nodes.functions.TypeDeclaration;
 import nodes.vjass.Library;
 import nodes.vjass.Scope;

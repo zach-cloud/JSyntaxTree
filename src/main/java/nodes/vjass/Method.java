@@ -6,8 +6,7 @@ import interfaces.IMergable;
 import interfaces.IVariableRenameable;
 import nodes.AbstractFunction;
 import nodes.AbstractNode;
-import nodes.functions.Argument;
-import nodes.functions.FunctionDeclaration;
+import nodes.arguments.Argument;
 import nodes.functions.Statements;
 import tree.TreeContext;
 

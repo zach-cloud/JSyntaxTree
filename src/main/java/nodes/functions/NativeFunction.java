@@ -4,6 +4,7 @@ import interfaces.IFunctionRenameable;
 import interfaces.IVariableRenameable;
 import nodes.AbstractFunction;
 import exception.ParsingException;
+import nodes.arguments.Argument;
 import tree.TreeContext;
 
 import java.util.ArrayList;

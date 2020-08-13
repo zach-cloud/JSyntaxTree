@@ -5,7 +5,7 @@ import interfaces.IAnalysisService;
 import interfaces.ISyntaxTree;
 import model.IsolateResult;
 import nodes.AbstractFunction;
-import nodes.functions.Argument;
+import nodes.arguments.Argument;
 import nodes.j.Variable;
 
 import java.util.*;

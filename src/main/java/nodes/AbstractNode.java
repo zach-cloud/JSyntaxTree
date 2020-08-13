@@ -10,7 +10,7 @@ import java.util.Scanner;
  * Represents a node in the syntax tree
  * AST Nodes shall be immutable.
  */
-public abstract class AbstractNode implements IAbstractNode {
+public abstract class AbstractNode extends AbstractReadable implements IAbstractNode {
 
     /**
      * Scanner to read lines from.
@@ -260,15 +260,5 @@ public abstract class AbstractNode implements IAbstractNode {
         line = line.replace("not(", "not (");
         line = line.replace(")not", ") not");
         return line;
-    }
-
-    protected final String rename(String original, String oldName, String newName) {
-        if(original.equals(oldName)) {
-            return newName;
-        } else if(original.equals("function " + oldName)) {
-            return "function " + newName;
-        } else {
-            return original;
-        }
     }
 }
