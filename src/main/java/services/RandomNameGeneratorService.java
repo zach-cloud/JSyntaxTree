@@ -9,12 +9,12 @@ import java.util.Random;
 /**
  * Used to generate random and unique variable/function names
  */
-public final class RandomNameGeneratorService implements IRandomNameGeneratorService {
+public class RandomNameGeneratorService implements IRandomNameGeneratorService {
 
-    private static String ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private static int LENGTH = 12;
-    private List<String> usedNames;
-    private Random random;
+    private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final int LENGTH = 12;
+    private final List<String> usedNames;
+    private final Random random;
 
     /**
      * Initialized the random name generator

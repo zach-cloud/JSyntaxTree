@@ -1,13 +1,11 @@
 package tree;
 
 import interfaces.IRandomNameGeneratorService;
-import services.RandomNameGeneratorService;
 import interfaces.ISyntaxTree;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
-import org.mockito.Mockito;
 
 public class SyntaxTreeDeduplicateStepDefs {
 
@@ -21,8 +19,7 @@ public class SyntaxTreeDeduplicateStepDefs {
 
     @Given("mock random name generator set up for {string}")
     public void mock_random_name_generator_set_up_for(String name) {
-        generator = Mockito.mock(IRandomNameGeneratorService.class);
-        Mockito.when(generator.next()).thenReturn(name);
+        generator = new MockRandomNameGeneratorService(name);
     }
 
     @When("Tree is deduplicated")
